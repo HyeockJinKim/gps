@@ -1,0 +1,137 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'index.css' %}">
+    <script src="{% static 'index.js' %}"></script>
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=C1X9zN5oIZoHY7Ez2ege&submodules=geocoder"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+
+    <title>GPS - Satellite</title>
+</head>
+<body>
+<div >
+
+    <select id="signal_type" style="width: 100%; height: 50px; text-align: center" onchange="change_type()">
+        <option>CA</option>
+        <option>PAC</option>
+        <option>EC</option>
+    </select>
+    <div class="grid-container">
+
+    <div id="map" class="grid-item" style="height: 670px; width: 100%;"></div>
+      <!--<div id="map" class="grid-item"></div>-->
+    <div class="grid-item" style="border: 1px solid black; border-radius: 10px; width: 80%; margin-left: 2em;">
+        <h3 id="signal"></h3>
+        <button onclick="is_deception = !is_deception; is_changed = true">Deception</button>
+    </div>
+    <div class="grid-item">
+        <div class="grid-container">
+            <div class="grid-item">2</div>
+            <div class="grid-item">1</div>
+        </div>
+    </div>
+
+<script>
+    let branch = {
+        kor: [[36.2415852, 128.5614499], [36.94869198118655, 128.26855668118654], [37.2415852, 127.5614499], [36.94869198118655, 126.85434311881345], [36.2415852, 126.5614499], [35.53447841881346, 126.85434311881345], [35.2415852, 127.5614499], [35.53447841881346, 128.26855668118654]],
+        cha: [[36.4198096, 121.4392376], [37.12691638118655, 121.14634438118655], [37.4198096, 120.4392376], [37.12691638118655, 119.73213081881345], [36.4198096, 119.4392376], [35.712702818813455, 119.73213081881345], [35.4198096, 120.4392376], [35.712702818813455, 121.14634438118655]],
+        jap: [[33.9606874, 133.0], [34.667794181186544, 132.70710678118655], [34.9606874, 132.0], [34.667794181186544, 131.29289321881345], [33.9606874, 131.0], [33.25358061881345, 131.29289321881345], [32.9606874, 132.0], [33.25358061881345, 132.70710678118655]]
+    };
+
+    let index = {
+        kor: 0,
+        cha: 0,
+        jap: 0
+    };
+
+    var mapOptions = {
+        center: new naver.maps.LatLng(37.3595704, 126.105399),
+        zoom: 1
+    };
+
+    let map = new naver.maps.Map('map', mapOptions);
+    let is_deception = false;
+    let is_changed = false;
+    let marker_list = {
+        kor: new naver.maps.Marker({
+            position: new naver.maps.LatLng(branch.kor[0][0], branch.kor[0][1]),
+            map: map,
+            title: 'Korea',
+            icon: {
+                content: '<i class="fas fa-plane" style="transform: rotate(90deg); color: blue;"></i>' //
+            }
+        }),
+        jap: new naver.maps.Marker({
+            position: new naver.maps.LatLng(branch.jap[0][0], branch.jap[0][1]),
+            map: map,
+            title: 'Japan',
+            icon: {
+                content: '<i class="fas fa-plane" style="transform: rotate(90deg); color: blue;"></i>' //
+            }
+        }),
+        cha: new naver.maps.Marker({
+            position: new naver.maps.LatLng(branch.cha[0][0], branch.cha[0][1]),
+            map: map,
+            title: 'China',
+            icon: {
+                content: '<i class="fas fa-plane" style="transform: rotate(90deg); color: blue;"></i>' //
+            }
+        })
+    };
+
+    function make_marker () {
+        let angle = [135, 90, 45, 0, 315, 270, 225, 180];
+        for (br in branch) {
+            for (let i = 0; i < 8; ++i) {
+                new naver.maps.Marker({
+                    position: new naver.maps.LatLng(branch[br][i][0], branch[br][i][1]),
+                    map: map,
+                    icon: {
+                        content: '<i class="fas fa-location-arrow" style="font-size: 0.4em; transform: rotate('+ angle[i] +'deg);"></i>' //
+                    }
+                });
+            }
+        }
+    }
+    make_marker();
+
+    function move_marker () {
+        if (is_deception) {
+            if (is_changed) {
+
+            }
+
+
+        } else {
+            if (is_changed) {
+
+            }
+            for (b in index) {
+                index[b] = (index[b] + 1) % 8;
+                console.log(marker_list[b])
+            }
+            {#marker_list.kor.setPosition(new naver.maps.LatLng(branch[br][i][0], branch[br][i][1]))#}
+
+
+        }
+    }
+    move_marker();
+    function change_type () {
+        let h = document.getElementById('signal');
+        let select = document.getElementById('signal_type');
+        h.innerText = select.selectedOptions[0].innerHTML;
+    }
+
+
+    naver.maps.Event.addListener(map, 'click', function(e) {
+        console.log(e.coord);
+    });
+    change_type();
+</script>
+</div>
+
+</div>
+</body>
+</html>
