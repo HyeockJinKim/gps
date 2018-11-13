@@ -13,7 +13,7 @@
 <body>
 <div >
 
-    <select id="signal_type" style="width: 100%; height: 50px; text-align: center" onchange="change_type()">
+    <select id="signal_type" style="width: 100%; height: 50px; text-align: center; margin-bottom: 1em;" onchange="change_type()">
         <option>CA</option>
         <option>PAC</option>
         <option>EC</option>
@@ -22,15 +22,46 @@
 
     <div id="map" class="grid-item" style="height: 670px; width: 100%;"></div>
       <!--<div id="map" class="grid-item"></div>-->
-    <div class="grid-item" style="border: 1px solid black; border-radius: 10px; width: 80%; margin-left: 2em;">
-        <h3 id="signal"></h3>
-        <button onclick="is_deception = !is_deception; is_changed = true">Deception</button>
+    <div class="grid-item" style="border: 1px solid black; border-radius: 10px; width: 90%; margin-left: 2em; height: 670px;">
+        <h3 id="signal" style="line-height: 40px; margin: 10px 0px;"></h3>
+
+        <div class="grid-container" style="height: 610px;">
+            <div class="grid-item" style="border-width: 1px 1px 0px 0px; border-style: solid; width: 100%;">
+
+
+            </div>
+            <div class="grid-item" style="border-width: 1px 0px 0px 0px; border-style: solid; width: 100%;">
+                <h3 id="deception_try" style="margin-top: 3em;">정상 상태</h3>
+                <button onclick="decept()">Deception</button>
+            </div>
+        </div>
     </div>
     <div class="grid-item">
-        <div class="grid-container">
-            <div class="grid-item">2</div>
-            <div class="grid-item">1</div>
+        <div class="grid-container" style="border: 1px solid black; overflow-y: auto; height: 500px; margin-top: 1em;">
+            <div class="grid-item" style="border-width: 0px 1px 1px 0px; border-style: solid; width: 100%; padding:0.5em 0em;">
+                <h3>정상 좌표</h3>
+            </div>
+            <div class="grid-item" style="border-width: 0px 0px 1px 0px; border-style: solid; width: 100%; padding:0.5em 0em;">
+                <h3>기만 좌표</h3>
+            </div>
+            <div class="grid-item" style="border-width: 0px 1px 0px 0px; border-style: solid; width: 100%; height: 430px;">
+                <ul id="good">
+                    <li></li>
+                </ul>
+
+            </div>
+            <div class="grid-item" style="width: 100%;">
+                <ul id="bad">
+                    <li></li>
+                </ul>
+            </div>
         </div>
+    </div>
+    <div class="grid-item" style="border: 1px solid black; border-radius: 10px; width: 90%; margin-left: 2em; margin-top: 1em;">
+        <h3>Controller</h3>
+        <button class="drop" onclick="drop(1)">Channel 1 Drop</button>
+        <button class="drop" onclick="drop(2)">Channel 2 Drop</button>
+        <button class="drop" onclick="drop(3)">Channel 3 Drop</button>
     </div>
 
 <script>
@@ -53,14 +84,31 @@
 
     let map = new naver.maps.Map('map', mapOptions);
     let is_deception = false;
-    let is_changed = false;
+    let is_stop = false;
+    let is_CA = true;
+
+    function make_marker () {
+        let angle = [315, 270, 225, 180, 135, 90, 45, 0, ];
+        for (br in branch) {
+            for (let i = 0; i < 8; ++i) {
+                new naver.maps.Marker({
+                    position: new naver.maps.LatLng(branch[br][i][0], branch[br][i][1]),
+                    map: map,
+                    icon: {
+                        content: '<i class="fas fa-location-arrow" style="font-size: 0.9em; transform: rotate('+ angle[i] +'deg);"></i>' //
+                    }
+                });
+            }
+        }
+    }
+    make_marker();
     let marker_list = {
         kor: new naver.maps.Marker({
             position: new naver.maps.LatLng(branch.kor[0][0], branch.kor[0][1]),
             map: map,
             title: 'Korea',
             icon: {
-                content: '<i class="fas fa-plane" style="transform: rotate(90deg); color: blue;"></i>' //
+                content: '<i class="fas fa-plane" style="font-size: 1.5em; transform: rotate(270deg); color: blue;"></i>' //
             }
         }),
         jap: new naver.maps.Marker({
@@ -68,7 +116,7 @@
             map: map,
             title: 'Japan',
             icon: {
-                content: '<i class="fas fa-plane" style="transform: rotate(90deg); color: blue;"></i>' //
+                content: '<i class="fas fa-plane" style="font-size: 1.5em; transform: rotate(270deg); color: blue;"></i>' //
             }
         }),
         cha: new naver.maps.Marker({
@@ -76,58 +124,108 @@
             map: map,
             title: 'China',
             icon: {
-                content: '<i class="fas fa-plane" style="transform: rotate(90deg); color: blue;"></i>' //
+                content: '<i class="fas fa-plane" style="font-size: 1.5em; transform: rotate(270deg); color: blue;"></i>' //
             }
         })
     };
 
-    function make_marker () {
-        let angle = [135, 90, 45, 0, 315, 270, 225, 180];
-        for (br in branch) {
-            for (let i = 0; i < 8; ++i) {
-                new naver.maps.Marker({
-                    position: new naver.maps.LatLng(branch[br][i][0], branch[br][i][1]),
-                    map: map,
-                    icon: {
-                        content: '<i class="fas fa-location-arrow" style="font-size: 0.4em; transform: rotate('+ angle[i] +'deg);"></i>' //
-                    }
-                });
-            }
-        }
-    }
-    make_marker();
-
+    let angle_marker = [270, 225, 180, 135, 90, 45, 0, 315];
+    let deception_index = {
+        kor: 0,
+        cha: 0,
+        jap: 0
+    };
+    let stop = {
+        kor: false,
+        cha: false,
+        jap: false
+    };
     function move_marker () {
-        if (is_deception) {
-            if (is_changed) {
-
-            }
-
-
-        } else {
-            if (is_changed) {
-
-            }
+        if (is_deception && is_CA) {
             for (b in index) {
-                index[b] = (index[b] + 1) % 8;
-                console.log(marker_list[b])
+                if (stop[b]) {
+                    marker_list[b].setIcon({
+                        content: '<i class="fas fa-plane" style="font-size: 1.5em; transform: rotate('+ angle_marker[deception_index[b]]+'deg); color: yellow;"></i>'
+                    });
+                } else {
+                    deception_index[b] = (deception_index[b] + 1) % 8;
+                    marker_list[b].setIcon({
+                        content: '<i class="fas fa-plane" style="font-size: 1.5em; transform: rotate('+ angle_marker[deception_index[b]]+'deg); color: red;"></i>'
+                    });
+                }
             }
-            {#marker_list.kor.setPosition(new naver.maps.LatLng(branch[br][i][0], branch[br][i][1]))#}
-
-
+        } else {
+            for (b in index) {
+                if (stop[b]) {
+                    marker_list[b].setIcon({
+                        content: '<i class="fas fa-plane" style="font-size: 1.5em; transform: rotate('+ angle_marker[index[b]]+'deg); color: yellow;"></i>'
+                    });
+                } else {
+                    index[b] = (index[b] + 1) % 8;
+                    deception_index[b] = index[b];
+                    marker_list[b].setPosition(new naver.maps.LatLng(branch[b][index[b]][0], branch[b][index[b]][1]));
+                    marker_list[b].setIcon({
+                        content: '<i class="fas fa-plane" style="font-size: 1.5em; transform: rotate('+ angle_marker[index[b]]+'deg); color: blue;"></i>'
+                    });
+                }
+            }
         }
     }
-    move_marker();
+    setInterval(move_marker, 1000);
     function change_type () {
         let h = document.getElementById('signal');
         let select = document.getElementById('signal_type');
         h.innerText = select.selectedOptions[0].innerHTML;
+        if (h.innerText === 'CA')
+            is_CA = true;
+        else
+            is_CA = false;
     }
-
 
     naver.maps.Event.addListener(map, 'click', function(e) {
         console.log(e.coord);
     });
+
+    function decept () {
+        is_deception = !is_deception;
+        let d = document.getElementById('deception_try');
+        if (is_deception) {
+            d.innerText = '기만 공격 시도중...';
+        } else {
+            d.innerText = '정상 상태';
+        }
+    }
+
+    function drop (num) {
+        if (num === 1) {
+            let kor_btn = document.getElementsByClassName('drop')[0];
+            if (stop.kor) {
+                stop.kor = false;
+                kor_btn.innerHTML = "Channel 1 Add";
+            } else {
+                stop.kor = true;
+                kor_btn.innerHTML = "Channel 1 Drop";
+            }
+        } else if (num === 2) {
+            let cha_btn = document.getElementsByClassName('drop')[1];
+            if (stop.cha) {
+                stop.cha = false;
+                cha_btn.innerHTML = "Channel 2 Add";
+            } else {
+                stop.cha = true;
+                cha_btn.innerHTML = "Channel 2 Drop";
+            }
+        } else {
+            let jap_btn = document.getElementsByClassName('drop')[2];
+            if (stop.jap) {
+                stop.jap = false;
+                jap_btn.innerHTML = "Channel 3 Add";
+            } else {
+                stop.jap = true;
+                jap_btn.innerHTML = "Channel 3 Drop";
+            }
+        }
+    };
     change_type();
 </script>
 </div>

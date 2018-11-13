@@ -4,6 +4,26 @@
 }
 
 .grid-item {
-    font-size: 30px;
+    font-size: 15px;
     text-align: center;
+}
+
+ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin-top: 0;
+    text-align: left;
+}
+
+li {
+    display: flex;
+    min-height: 2em;
+    height: 2em;
+    line-height: 50px;
+    padding: 0 0.9rem;
+    border-radius: 5px;
+}
+
+.drop {
+
 }
