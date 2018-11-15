@@ -50,12 +50,12 @@
                 <option>EC</option>
             </select>
             </div>
-            <span class="btn red" style="font-size: 15px; width: 300px;" onclick="change_type()">Acquisition Result</span>
+            <span class="btn red" style="font-size: 15px; width: 300px;" onclick="change_type()">Do Acquisition</span>
         </div>
 
-        <h1>Acquisition Result</h1>
+        <h1>Acquisition</h1>
         <div style="height: 450px;">
-            <img id="img" src=""/>
+            <img id="img" src="{% static 'img/set1/ACQ_NULL.jpg' %}"/>
         </div>
         <div style="display: grid; grid-template-columns: auto auto auto; text-align: center">
             <div>
@@ -399,9 +399,9 @@
             d.innerHTML = channel_dict[br]+'No Data...';
         } else if (is_deception[br]) {
             if (is_CA)
-                d.innerHTML = channel_dict[br]+'Spoofing...';
+                d.innerHTML = channel_dict[br]+'Spoofed...';
             else {
-                d.innerHTML = channel_dict[br] + 'No signal acquisition';
+                d.innerHTML = channel_dict[br] + 'Not Spoofed';
                 return;
             }
             let lt = dec[br][0] - branch[br][index[br]][0];
@@ -441,9 +441,9 @@
                 kor_btn.innerHTML = "Leave A";
                 if (is_deception.kor) {
                     if (is_CA)
-                        d.innerHTML = channel_dict.kor+'Spoofing...';
+                        d.innerHTML = channel_dict.kor+'Spoofed...';
                     else
-                        d.innerHTML = channel_dict.kor+'No signal acquisition';
+                        d.innerHTML = channel_dict.kor+'Not Spoofed';
                 } else {
                     d.innerHTML = channel_dict.kor+'Normal State';
                 }
@@ -460,9 +460,9 @@
                 cha_btn.innerHTML = "Leave B";
                 if (is_deception.cha) {
                     if (is_CA)
-                        d.innerHTML = channel_dict.cha+'Spoofing...';
+                        d.innerHTML = channel_dict.cha+'Spoofed...';
                     else
-                        d.innerHTML = channel_dict.cha+'No signal acquisition';
+                        d.innerHTML = channel_dict.cha+'Not Spoofed';
                 } else {
                     d.innerHTML = channel_dict.cha+'Normal State';
                 }
@@ -479,9 +479,9 @@
                 jap_btn.innerHTML = "Leave C";
                 if (is_deception.jap) {
                     if (is_CA)
-                        d.innerHTML = channel_dict.jap+'Spoofing...';
+                        d.innerHTML = channel_dict.jap+'Spoofed...';
                     else
-                        d.innerHTML = channel_dict.jap+'No signal acquisition';
+                        d.innerHTML = channel_dict.jap+'Not Spoofed';
                 } else {
                     d.innerHTML = channel_dict.jap+'Normal State';
                 }
@@ -522,7 +522,11 @@
                 is_CA = true;
             else
                 is_CA = false;
-
+        let temp = document.getElementsByClassName('drop');
+        let temp_ABC = ['A', 'B', 'C'];
+        for (var i = 0; i < 3; ++i) {
+            temp[i].innerHTML = 'Leave '+ temp_ABC[i];
+        }
         for (b in index) {
             let d = document.getElementsByClassName('deception_try')[index_dict[b]];
             index[b] = 0;
@@ -540,7 +544,6 @@
             is_deception[b] = false;
             deception_index[b] = 0;
             decept_marker[b] = [];
-
         }
     }
 </script>
