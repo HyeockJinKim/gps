@@ -12,56 +12,71 @@
 </head>
 <body>
 <div >
-
-    <select id="signal_type" style="width: 100%; height: 50px; text-align: center; margin-bottom: 1em;" onchange="change_type()">
-        <option>CA</option>
-        <option>PAC</option>
-        <option>EC</option>
-    </select>
     <div class="grid-container">
-
-    <div id="map" class="grid-item" style="height: 670px; width: 100%;"></div>
+    <div class="grid-item" style="height: 670px; width: 100%;">
+        <h2 id="key" style="line-height: 50px; margin: 0;">Satellite Cryptography Key : </h2>
+        <div id="map" style="height: 620px; width: 100%;"></div>
+        <div class="grid-container" style="border: 1px solid black; height: 250px; width: 900px; margin-top: 2em; margin-left: 30px;">
+            <div class="grid-item" style="border-width: 0px 1px 1px 0px; height: 70px; border-style: solid; width: 450px; padding:0.1em 0em;">
+                <h2>Normal Location</h2>
+            </div>
+            <div class="grid-item" style="border-width: 0px 0px 1px 0px; height: 70px; border-style: solid; width: 450px; padding:0.1em 0em;">
+                <h2>Spoofing Location</h2>
+            </div>
+            <div class="grid-item" style="border-width: 0px 1px 0px 0px; border-style: solid; width: 450px; height: 180px;">
+                <ul>
+                    <li class="good"></li>
+                    <li class="good"></li>
+                    <li class="good"></li>
+                </ul>
+            </div>
+            <div class="grid-item" style="width: 450px;">
+                <ul>
+                    <li class="bad"></li>
+                    <li class="bad"></li>
+                    <li class="bad"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{#    <div id="map" class="grid-item" ></div>#}
       <!--<div id="map" class="grid-item"></div>-->
-    <div class="grid-item" style="border: 1px solid black; border-radius: 10px; width: 90%; margin-left: 2em; height: 670px;">
-        <h3 id="signal" style="line-height: 40px; margin: 10px 0px;"></h3>
-
-        <div class="grid-container" style="height: 610px;">
-            <div class="grid-item" style="border-width: 1px 1px 0px 0px; border-style: solid; width: 100%;">
-
-
+    <div class="grid-item" style="border: 1px solid black; border-radius: 10px; width: 800px; margin-left: 2em; height: 950px;">
+        <div style="display: grid; grid-template-columns: auto auto;">
+            <div class="select">
+            <select name="slct" id="signal_type" style="text-align-last: center; font-size: 1.2em;" onchange="initialize()">
+                <option>CA</option>
+                <option>PAC</option>
+                <option>EC</option>
+            </select>
             </div>
-            <div class="grid-item" style="border-width: 1px 0px 0px 0px; border-style: solid; width: 100%;">
-                <h3 id="deception_try" style="margin-top: 3em;">정상 상태</h3>
-                <button onclick="decept()">Deception</button>
+            <span class="btn red" style="font-size: 15px; width: 300px;" onclick="change_type()">Acquisition Result</span>
+        </div>
+
+        <h2>Acquisition Result</h2>
+        <div style="height: 450px;">
+            <img id="img" src="{% static 'img/CA_1.png' %}"/>
+        </div>
+        <div style="display: grid; grid-template-columns: auto auto auto; text-align: center">
+            <div>
+                <h2 class="deception_try"><b>A:</b> Normal State</h2>
+                <span class="btn red" onclick="decept('kor')">Spoofing A</span>
+                <span class="info btn red" onclick="change_info('kor')">User Cryptography Key</span>
+                <span class="drop btn red" onclick="drop(1)">Leave A</span>
+            </div>
+            <div>
+                <h2 class="deception_try"><b>B:</b> Normal State</h2>
+                <span class="btn red" onclick="decept('cha')">Spoofing B</span>
+               <span class="info btn red" onclick="change_info('cha')">User Cryptography Key</span>
+                <span class="drop btn red" onclick="drop(2)">Leave B</span>
+            </div>
+            <div>
+                <h2 class="deception_try"><b>C:</b> Normal State</h2>
+                <span class="btn red" onclick="decept('jap')">Spoofing C</span>
+               <span class="info btn red" onclick="change_info('jap')">User Cryptography Key</span>
+                <span class="drop btn red" onclick="drop(3)">Leave C</span>
             </div>
         </div>
-    </div>
-    <div class="grid-item">
-        <div class="grid-container" style="border: 1px solid black; overflow-y: auto; height: 500px; margin-top: 1em;">
-            <div class="grid-item" style="border-width: 0px 1px 1px 0px; border-style: solid; width: 100%; padding:0.5em 0em;">
-                <h3>정상 좌표</h3>
-            </div>
-            <div class="grid-item" style="border-width: 0px 0px 1px 0px; border-style: solid; width: 100%; padding:0.5em 0em;">
-                <h3>기만 좌표</h3>
-            </div>
-            <div class="grid-item" style="border-width: 0px 1px 0px 0px; border-style: solid; width: 100%; height: 430px;">
-                <ul id="good">
-                    <li></li>
-                </ul>
-
-            </div>
-            <div class="grid-item" style="width: 100%;">
-                <ul id="bad">
-                    <li></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="grid-item" style="border: 1px solid black; border-radius: 10px; width: 90%; margin-left: 2em; margin-top: 1em;">
-        <h3>Controller</h3>
-        <button class="drop" onclick="drop(1)">Channel 1 Drop</button>
-        <button class="drop" onclick="drop(2)">Channel 2 Drop</button>
-        <button class="drop" onclick="drop(3)">Channel 3 Drop</button>
     </div>
 
 <script>
@@ -71,33 +86,68 @@
         jap: [[33.9606874, 133.0], [34.667794181186544, 132.70710678118655], [34.9606874, 132.0], [34.667794181186544, 131.29289321881345], [33.9606874, 131.0], [33.25358061881345, 131.29289321881345], [32.9606874, 132.0], [33.25358061881345, 132.70710678118655]]
     };
 
+    let deception_route = {
+        kor: [],
+        cha: [],
+        jap: []
+    };
     let index = {
         kor: 0,
         cha: 0,
         jap: 0
     };
-
     var mapOptions = {
         center: new naver.maps.LatLng(37.3595704, 126.105399),
         zoom: 1
     };
 
     let map = new naver.maps.Map('map', mapOptions);
-    let is_deception = false;
-    let is_stop = false;
+    let is_deception = {
+        kor: false,
+        cha: false,
+        jap: false
+    };
     let is_CA = true;
+    let route_marker = {
+        kor: [],
+        cha: [],
+        jap: []
+    };
+    let key = 'asdf';
+    let key_list = {
+        kor: 'asdf',
+        cha: 'asdf',
+        jap: 'asdf'
+    };
+    function init_key () {
+        let t = [(Math.floor((Math.random() * 10) + 1)%9+1)];
+        let str = 'abcdef';
+        for (var i = 0; i < 15; ++i) {
+            if ((Math.floor((Math.random() * 10) + 1)%3) !== 1) {
+                t.push(str.charAt(Math.floor(Math.random()*100)%6))
+            } else {
+                t.push(Math.floor(Math.random()*100%10));
+            }
+        }
+        key = t.join('');
+        key_list.kor = key;
+        key_list.cha = key;
+        key_list.jap = key;
+    }
+    init_key();
+    document.getElementById('key').innerHTML = 'Satellite Cryptography Key : ' + key;
+    let angle = [315, 270, 225, 180, 135, 90, 45, 0, ];
 
     function make_marker () {
-        let angle = [315, 270, 225, 180, 135, 90, 45, 0, ];
         for (br in branch) {
             for (let i = 0; i < 8; ++i) {
-                new naver.maps.Marker({
-                    position: new naver.maps.LatLng(branch[br][i][0], branch[br][i][1]),
+                route_marker[br].push(new naver.maps.Marker({
+                    position: new naver.maps.LatLng(branch[br][i][0]-0.2, branch[br][i][1]+0.5),
                     map: map,
                     icon: {
                         content: '<i class="fas fa-location-arrow" style="font-size: 0.9em; transform: rotate('+ angle[i] +'deg);"></i>' //
                     }
-                });
+                }));
             }
         }
     }
@@ -108,7 +158,7 @@
             map: map,
             title: 'Korea',
             icon: {
-                content: '<i class="fas fa-plane" style="font-size: 1.5em; transform: rotate(270deg); color: blue;"></i>' //
+                content: '<i class="fas fa-plane" style="font-size: 3em; transform: rotate(270deg); color: blue;"></i>' //
             }
         }),
         jap: new naver.maps.Marker({
@@ -116,7 +166,7 @@
             map: map,
             title: 'Japan',
             icon: {
-                content: '<i class="fas fa-plane" style="font-size: 1.5em; transform: rotate(270deg); color: blue;"></i>' //
+                content: '<i class="fas fa-plane" style="font-size: 3em; transform: rotate(270deg); color: blue;"></i>' //
             }
         }),
         cha: new naver.maps.Marker({
@@ -124,10 +174,37 @@
             map: map,
             title: 'China',
             icon: {
-                content: '<i class="fas fa-plane" style="font-size: 1.5em; transform: rotate(270deg); color: blue;"></i>' //
+                content: '<i class="fas fa-plane" style="font-size: 3em; transform: rotate(270deg); color: blue;"></i>' //
             }
         })
     };
+
+    var A = new naver.maps.Marker({
+        position: new naver.maps.LatLng(branch.kor[1][0]-0.35, branch.kor[1][1]-0.27),
+        map: map,
+        title: 'A',
+        icon: {
+            content: '<h1>A</h1>' //
+        }
+    });
+
+    var B = new naver.maps.Marker({
+        position: new naver.maps.LatLng(branch.cha[1][0]-0.35, branch.cha[1][1]-0.27),
+        map: map,
+        title: 'B',
+        icon: {
+            content: '<h1>B</h1>' //
+        }
+    });
+
+    var C = new naver.maps.Marker({
+        position: new naver.maps.LatLng(branch.jap[1][0]-0.35, branch.jap[1][1]-0.27),
+        map: map,
+        title: 'C',
+        icon: {
+            content: '<h1>C</h1>' //
+        }
+    });
 
     let angle_marker = [270, 225, 180, 135, 90, 45, 0, 315];
     let deception_index = {
@@ -140,93 +217,293 @@
         cha: false,
         jap: false
     };
-    function move_marker () {
-        if (is_deception && is_CA) {
-            for (b in index) {
-                if (stop[b]) {
-                    marker_list[b].setIcon({
-                        content: '<i class="fas fa-plane" style="font-size: 1.5em; transform: rotate('+ angle_marker[deception_index[b]]+'deg); color: yellow;"></i>'
-                    });
-                } else {
-                    deception_index[b] = (deception_index[b] + 1) % 8;
-                    marker_list[b].setIcon({
-                        content: '<i class="fas fa-plane" style="font-size: 1.5em; transform: rotate('+ angle_marker[deception_index[b]]+'deg); color: red;"></i>'
-                    });
-                }
-            }
+
+    let infoWindow = {
+        kor: new naver.maps.InfoWindow({
+            content: '<div class="iw_inner"><h3 style="margin: 10px 10px 0 10px;">Group A</h3><h3 style="margin: 0 10px 10px 10px;">'+key_list.kor+'</h3></div>'
+        }),
+        cha: new naver.maps.InfoWindow({
+            content: '<div class="iw_inner"><h3 style="margin: 10px 10px 0 10px;">Group B</h3><h3 style="margin: 0 10px 10px 10px;">'+key_list.cha+'</h3></div>'
+        }),
+        jap: new naver.maps.InfoWindow({
+            content: '<div class="iw_inner"><h3 style="margin: 10px 10px 0 10px;">Group C</h3><h3 style="margin: 0 10px 10px 10px;">'+key_list.jap+'</h3></div>'
+        })
+    };
+
+    function change_info (br) {
+        if (infoWindow[br].getMap()) {
+            infoWindow[br].close();
         } else {
-            for (b in index) {
-                if (stop[b]) {
-                    marker_list[b].setIcon({
-                        content: '<i class="fas fa-plane" style="font-size: 1.5em; transform: rotate('+ angle_marker[index[b]]+'deg); color: yellow;"></i>'
-                    });
-                } else {
-                    index[b] = (index[b] + 1) % 8;
-                    deception_index[b] = index[b];
-                    marker_list[b].setPosition(new naver.maps.LatLng(branch[b][index[b]][0], branch[b][index[b]][1]));
-                    marker_list[b].setIcon({
-                        content: '<i class="fas fa-plane" style="font-size: 1.5em; transform: rotate('+ angle_marker[index[b]]+'deg); color: blue;"></i>'
+            infoWindow[br].open(map, marker_list[br]);
+            infoWindow[br].setPosition(new naver.maps.LatLng(branch[br][index[br]][0], branch[br][index[br]][1]));
+        }
+    }
+
+    let index_dict = {
+        kor: 0,
+        cha: 1,
+        jap: 2
+    };
+
+    let channel_dict = {
+        kor: '<b>A:</b>&nbsp;',
+        cha: '<b>B:</b>&nbsp;',
+        jap: '<b>C:</b>&nbsp;'
+    };
+    var dec_ang = {
+        kor: '300deg',
+        cha: '90deg',
+        jap: '300deg'
+    };
+    var fly_ang = {
+        kor: '240deg',
+        cha: '30deg',
+        jap: '240deg'
+    };
+
+    function move_marker () {
+        let good = document.getElementsByClassName('good');
+        let bad = document.getElementsByClassName('bad');
+        for (b in index) {
+            if (stop[b]) {
+                marker_list[b].setIcon({
+                    content: '<i class="fas fa-plane" style="font-size: 3em; transform: rotate('+ angle_marker[index[b]]+'deg); color: yellow;"></i>'
+                });
+                for (let i = 0; i < 8; ++i) {
+                    route_marker[b][i].setIcon({
+                            content: '<p></p>' //
                     });
                 }
+            } else if (is_deception[b] && is_CA) {
+                for (let i = 0; i < 8; ++i) {
+                    route_marker[b][i].setIcon({
+                            content: '<i class="fas fa-location-arrow" style="font-size: 0.9em; transform: rotate('+ angle[i] +'deg);"></i>' //
+                    });
+                }
+                deception_index[b] += 1;
+                if (deception_index[b] > 9) {
+                    deception_index[b] = 9;
+                }
+                marker_list[b].setPosition(new naver.maps.LatLng(deception_route[b][deception_index[b]][0], deception_route[b][deception_index[b]][1]));
+                marker_list[b].setIcon({
+                    content: '<i class="fas fa-plane" style="font-size: 3em; transform: rotate('+ fly_ang[b]+'); color: blue;"></i>'
+                });
+                {#marker_list[b].setIcon({#}
+                {#    content: '<i class="fas fa-plane" style="font-size: 3em; transform: rotate('+ angle_marker[deception_index[b]]+'deg); color: red;"></i>'#}
+                {# });#}
+
+                good[index_dict[b]].innerHTML = channel_dict[b];
+                bad[index_dict[b]].innerHTML = channel_dict[b] + (stop[b] ? '' : branch[b][deception_index[b]%8][0]+', '+branch[b][deception_index[b]%8][1]);
+                if (infoWindow[b].getMap()) {
+                    infoWindow[b].setPosition(new naver.maps.LatLng(deception_route[b][deception_index[b]][0] - 0.2, deception_route[b][deception_index[b]][1] + 0.6));
+                }
+            } else {
+                for (let i = 0; i < 8; ++i) {
+                    route_marker[b][i].setIcon({
+                            content: '<i class="fas fa-location-arrow" style="font-size: 0.9em; transform: rotate('+ angle[i] +'deg);"></i>' //
+                    });
+                }
+                index[b] = (index[b] + 1) % 8;
+                marker_list[b].setPosition(new naver.maps.LatLng(branch[b][index[b]][0], branch[b][index[b]][1]));
+                marker_list[b].setIcon({
+                    content: '<i class="fas fa-plane" style="font-size: 3em; transform: rotate('+ angle_marker[index[b]]+'deg); color: blue;"></i>'
+                });
+                good[index_dict[b]].innerHTML = channel_dict[b] + (stop[b] ? '' : branch[b][index[b]][0]+', '+branch[b][index[b]][1]);
+                bad[index_dict[b]].innerHTML = channel_dict[b];
+                if (infoWindow[b].getMap()) {
+                    infoWindow[b].setPosition(new naver.maps.LatLng(branch[b][index[b]][0] - 0.2, branch[b][index[b]][1] + 0.6));
+                }
             }
+
         }
     }
     setInterval(move_marker, 1000);
+    let img_index = 1;
+    function change_image(name) {
+        let img = document.getElementById('img');
+        img.src = 'static/img/'+ name +'_'+img_index+'.png';
+        img_index = (img_index+1) % 12;
+    }
     function change_type () {
-        let h = document.getElementById('signal');
         let select = document.getElementById('signal_type');
-        h.innerText = select.selectedOptions[0].innerHTML;
-        if (h.innerText === 'CA')
+        let name = select.selectedOptions[0].innerText;
+        if (name === 'CA')
             is_CA = true;
         else
             is_CA = false;
-    }
 
-    naver.maps.Event.addListener(map, 'click', function(e) {
-        console.log(e.coord);
-    });
-
-    function decept () {
-        is_deception = !is_deception;
-        let d = document.getElementById('deception_try');
-        if (is_deception) {
-            d.innerText = '기만 공격 시도중...';
+        if (name === 'CA') {
+            setTimeout(change_image('CA'), 1000);
+        } else if (name === 'PEC') {
+            setTimeout(change_image('PEC'), 3000);
         } else {
-            d.innerText = '정상 상태';
+            setTimeout(change_image('EC'), 20000);
+        }
+    }
+    let dec = {
+        kor: [39.9737544, 125.6460437],
+        cha: [33.1554441, 126.8125058],
+        jap: [37.5709785, 131.1102824]
+    };
+    let decept_marker = {
+        kor: [],
+        cha: [],
+        jap: []
+    };
+
+    function decept (br) {
+        is_deception[br] = !is_deception[br];
+        let d = document.getElementsByClassName('deception_try')[index_dict[br]];
+        if (stop[br]) {
+            d.innerHTML = channel_dict[br]+'No Data...';
+        } else if (is_deception[br]) {
+            if (is_CA)
+                d.innerHTML = channel_dict[br]+'Spoofing...';
+            else {
+                d.innerHTML = channel_dict[br] + 'No signal acquisition';
+                return;
+            }
+            let lt = dec[br][0] - branch[br][index[br]][0];
+            let lg = dec[br][1] - branch[br][index[br]][1];
+            lt /= 10;
+            lg /= 10;
+            deception_route[br] = [];
+
+            for (var i = 0; i < 10; ++i) {
+                deception_route[br].push([branch[br][index[br]][0]+(lt*i) -0.2,branch[br][index[br]][1]+(lg*i)+0.5]);
+                decept_marker[br].push(new naver.maps.Marker({
+                    position: new naver.maps.LatLng(deception_route[br][i][0], deception_route[br][i][1]),
+                    map: map,
+                    icon: {
+                        content: '<i class="fas fa-location-arrow" style="color: red; font-size: 0.9em; transform: rotate('+dec_ang[br]+');"></i>' //
+                    }
+                }));
+            }
+        } else {
+            d.innerHTML = channel_dict[br]+'Normal State';
+            for (var i = 0; i < 10; ++i) {
+                decept_marker[br][i].setIcon({
+                    content: '<p></p>'
+                });
+            }
+            deception_index[br] = 0;
+            decept_marker[br] = [];
         }
     }
 
     function drop (num) {
         if (num === 1) {
             let kor_btn = document.getElementsByClassName('drop')[0];
+            let d = document.getElementsByClassName('deception_try')[index_dict.kor];
             if (stop.kor) {
                 stop.kor = false;
-                kor_btn.innerHTML = "Channel 1 Add";
+                kor_btn.innerHTML = "Leave A";
+                if (is_deception.kor) {
+                    if (is_CA)
+                        d.innerHTML = channel_dict.kor+'Spoofing...';
+                    else
+                        d.innerHTML = channel_dict.kor+'No signal acquisition';
+                } else {
+                    d.innerHTML = channel_dict.kor+'Normal State';
+                }
             } else {
                 stop.kor = true;
-                kor_btn.innerHTML = "Channel 1 Drop";
+                kor_btn.innerHTML = "Join A";
+                d.innerHTML = channel_dict.kor+'No Data...';
             }
         } else if (num === 2) {
             let cha_btn = document.getElementsByClassName('drop')[1];
+            let d = document.getElementsByClassName('deception_try')[index_dict.cha];
             if (stop.cha) {
                 stop.cha = false;
-                cha_btn.innerHTML = "Channel 2 Add";
+                cha_btn.innerHTML = "Leave B";
+                if (is_deception.cha) {
+                    if (is_CA)
+                        d.innerHTML = channel_dict.cha+'Spoofing...';
+                    else
+                        d.innerHTML = channel_dict.cha+'No signal acquisition';
+                } else {
+                    d.innerHTML = channel_dict.cha+'Normal State';
+                }
             } else {
                 stop.cha = true;
-                cha_btn.innerHTML = "Channel 2 Drop";
+                cha_btn.innerHTML = "Join B";
+                d.innerHTML = channel_dict.cha+'No Data...';
             }
         } else {
             let jap_btn = document.getElementsByClassName('drop')[2];
+            let d = document.getElementsByClassName('deception_try')[index_dict.jap];
             if (stop.jap) {
                 stop.jap = false;
-                jap_btn.innerHTML = "Channel 3 Add";
+                jap_btn.innerHTML = "Leave C";
+                if (is_deception.jap) {
+                    if (is_CA)
+                        d.innerHTML = channel_dict.jap+'Spoofing...';
+                    else
+                        d.innerHTML = channel_dict.jap+'No signal acquisition';
+                } else {
+                    d.innerHTML = channel_dict.jap+'Normal State';
+                }
             } else {
                 stop.jap = true;
-                jap_btn.innerHTML = "Channel 3 Drop";
+                jap_btn.innerHTML = "Join C";
+                d.innerHTML = channel_dict.jap+'No Data...';
             }
         }
-    };
+
+        let t = [(Math.floor((Math.random() * 10) + 1)%9+1)];
+        let str = 'abcdef';
+        for (var i = 0; i < 15; ++i) {
+            if ((Math.floor((Math.random() * 10) + 1)%3) !== 1) {
+                t.push(str.charAt(Math.floor(Math.random()*100)%6))
+            } else {
+                t.push(Math.floor(Math.random()*100%10));
+            }
+        }
+        key = t.join('');
+        var temp = {
+            kor: 'A',
+            cha: 'B',
+            jap: 'C'
+        };
+        for (k in key_list) {
+            if (!stop[k]) {
+                key_list[k] = key;
+                infoWindow[k].setContent('<div class="iw_inner"><h3 style="margin: 10px 10px 0 10px;">Group '+temp[k]+'</h3><h3 style="margin: 0 10px 10px 10px;">'+key_list[k]+'</h3></div>');
+            }
+        }
+        document.getElementById('key').innerHTML = 'Satellite Cryptography Key : ' + key;
+    }
     change_type();
+
+    function initialize() {
+        let select = document.getElementById('signal_type');
+            let name = select.selectedOptions[0].innerText;
+            if (name === 'CA')
+                is_CA = true;
+            else
+                is_CA = false;
+
+        for (b in index) {
+            let d = document.getElementsByClassName('deception_try')[index_dict[b]];
+            index[b] = 0;
+            marker_list[b].setPosition(new naver.maps.LatLng(branch[b][index[b]][0], branch[b][index[b]][1]));
+            marker_list[b].setIcon({
+                content: '<i class="fas fa-plane" style="font-size: 3em; transform: rotate('+ angle_marker[index[b]]+'deg); color: blue;"></i>'
+            });
+            stop[b] = false;
+            d.innerHTML = channel_dict[b]+'Normal State';
+            for (var i in decept_marker[b]) {
+                decept_marker[b][i].setIcon({
+                    content: '<p></p>'
+                });
+            }
+            is_deception[b] = false;
+            deception_index[b] = 0;
+            decept_marker[b] = [];
+
+        }
+    }
 </script>
 </div>
 

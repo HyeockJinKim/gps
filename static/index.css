@@ -9,21 +9,127 @@
 }
 
 ul {
-    list-style-type: none;
-    padding-left: 0;
-    margin-top: 0;
-    text-align: left;
+  list-style-type: none;
+  padding-left: 0;
+  text-align: left;
 }
 
 li {
-    display: flex;
-    min-height: 2em;
-    height: 2em;
-    line-height: 50px;
-    padding: 0 0.9rem;
-    border-radius: 5px;
+  display: flex;
+  padding: 0 0.9rem;
+  font-size: 18px;
+  margin: 1.2em 0;
 }
 
 .drop {
 
+}
+
+/* start da css for da buttons */
+.btn {
+  width: 150px;
+  margin: 10px 5px;
+  color: #fff;
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.btn:active {
+  transform: translate(0px, 5px);
+  -webkit-transform: translate(0px, 5px);
+  box-shadow: 0px 1px 0px 0px;
+}
+
+.blue {
+  border-radius: 5px;
+  padding: 15px 25px;
+  font-size: 18px;
+  text-decoration: none;
+  background-color: #55acee;
+  box-shadow: 0px 5px 0px 0px #3C93D5;
+}
+
+.blue:hover {
+  background-color: #6FC6FF;
+}
+
+.red {
+  border-radius: 5px;
+  padding: 15px 25px;
+  font-size: 18px;
+  text-decoration: none;
+  background-color: rgba(77, 71, 65, 0.73);
+  box-shadow: 0px 5px 0px 0px rgba(77, 71, 65, 0.82);
+}
+
+.red:hover {
+  background-color: rgba(24, 23, 23, 0.8);
+}
+
+.yellow {
+  border-radius: 5px;
+  padding: 15px 25px;
+  font-size: 18px;
+  background-color: #f1c40f;
+  box-shadow: 0px 5px 0px 0px #D8AB00;
+}
+
+.yellow:hover {
+  background-color: #FFDE29;
+}
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  outline: 0;
+  box-shadow: none;
+  border: 0 !important;
+  background: rgba(235, 234, 223, 0.29);
+  background-image: none;
+}
+/* Custom Select */
+.select {
+  position: relative;
+  display: block;
+  width: 350px;
+  margin: 1em 2em;
+  height: 3em;
+  line-height: 3;
+  background: rgba(235, 234, 223, 0.29);
+  overflow: hidden;
+  border-radius: 10px;
+}
+select {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0 0 0 .5em;
+  color: #2e2e2e;
+  cursor: pointer;
+}
+select::-ms-expand {
+  display: none;
+}
+/* Arrow */
+.select::after {
+  content: '\25BC';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0 1em;
+  background: rgba(235, 234, 223, 0.44);
+  pointer-events: none;
+}
+/* Transition */
+.select:hover::after {
+  color: #564d50;
+}
+.select::after {
+  -webkit-transition: .25s all ease;
+  -o-transition: .25s all ease;
+  transition: .25s all ease;
 }
