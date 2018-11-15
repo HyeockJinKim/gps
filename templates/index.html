@@ -357,12 +357,12 @@
         if (name === 'CA') {
             timer = 1;
         } else if (name === 'PAC') {
-            timer = 3;
+            timer = 4;
         } else {
             timer = 20;
         }
         img_name = name;
-        repeat = setInterval(timing, 1000);
+        repeat = setInterval(timing, 500);
     }
     function change_type () {
         let select = document.getElementById('signal_type');
