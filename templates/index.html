@@ -53,9 +53,9 @@
             <span class="btn red" style="font-size: 15px; width: 300px;" onclick="change_type()">Acquisition Result</span>
         </div>
 
-        <h2>Acquisition Result</h2>
+        <h1>Acquisition Result</h1>
         <div style="height: 450px;">
-            <img id="img" src="{% static 'img/CA_1.png' %}"/>
+            <img id="img" src=""/>
         </div>
         <div style="display: grid; grid-template-columns: auto auto auto; text-align: center">
             <div>
@@ -319,10 +319,50 @@
     }
     setInterval(move_marker, 1000);
     let img_index = 1;
+    let timer = 0;
+    let img_name = '';
+    let repeat;
+
+    function alter_image() {
+        if (img_name !== undefined) {
+            let img = document.getElementById('img');
+            img.src = 'static/img/'+ img_name +'_'+img_index+'.png';
+            img_index = (img_index+1) % 12;
+        }
+    }
+
+    function timing() {
+        console.log(img_name);
+        if (img_name === undefined) {
+            return ;
+        }
+        if (timer < 0)
+            clearInterval(repeat);
+        if (timer === 0) {
+            timer -= 1;
+            alter_image();
+        } else {
+            timer -= 1;
+        }
+
+    }
+
     function change_image(name) {
+        console.log(name);
+        if (name === undefined) {
+            return ;
+        }
         let img = document.getElementById('img');
-        img.src = 'static/img/'+ name +'_'+img_index+'.png';
-        img_index = (img_index+1) % 12;
+        img.src = '';
+        if (name === 'CA') {
+            timer = 1;
+        } else if (name === 'PAC') {
+            timer = 3;
+        } else {
+            timer = 20;
+        }
+        img_name = name;
+        repeat = setInterval(timing, 1000);
     }
     function change_type () {
         let select = document.getElementById('signal_type');
@@ -331,13 +371,14 @@
             is_CA = true;
         else
             is_CA = false;
+        console.log(name);
 
         if (name === 'CA') {
-            setTimeout(change_image('CA'), 1000);
-        } else if (name === 'PEC') {
-            setTimeout(change_image('PEC'), 3000);
+            change_image('CA');
+        } else if (name === 'PAC') {
+            change_image('PAC');
         } else {
-            setTimeout(change_image('EC'), 20000);
+            change_image('EC')
         }
     }
     let dec = {
@@ -474,8 +515,6 @@
         }
         document.getElementById('key').innerHTML = 'Satellite Cryptography Key : ' + key;
     }
-    change_type();
-
     function initialize() {
         let select = document.getElementById('signal_type');
             let name = select.selectedOptions[0].innerText;
