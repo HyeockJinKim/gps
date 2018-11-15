@@ -326,8 +326,8 @@
     function alter_image() {
         if (img_name !== undefined) {
             let img = document.getElementById('img');
-            img.src = 'static/img/'+ img_name +'_'+img_index+'.png';
-            img_index = (img_index+1) % 12;
+            img.src = 'static/img/set'+img_index+'/ACQ_'+ img_name +'.jpg';
+            img_index = (img_index+1) % 9+1;
         }
     }
 
@@ -353,7 +353,7 @@
             return ;
         }
         let img = document.getElementById('img');
-        img.src = '';
+        img.src = 'static/img/set1/ACQ_NULL.jpg';
         if (name === 'CA') {
             timer = 1;
         } else if (name === 'PAC') {
